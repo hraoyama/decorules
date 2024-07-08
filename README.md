@@ -28,6 +28,7 @@ If we wanted to guarantee that a new class (and its derived classes) had impleme
 
 ```python
 from decorules import HasEnforcedRules
+import types
 @raiseErrorIfFalseOnClass(partial(key_type_enforcer1, enforced_type=types.FunctionType, enforced_key='library_functionality'), AttributeError)
 class NormalLibraryClass(metaclass=HasEnforcedRules):
     def __init__(self, value=20):
@@ -39,7 +40,6 @@ class NormalLibraryClass(metaclass=HasEnforcedRules):
 If in addition we also wanted to ensure that every instance had an `int` member `x` we would add:
 
 ```python
-from decorules import HasEnforcedRules
 @raiseErrorIfFalseOnInstance(partial(key_type_enforcer1, enforced_type=int, enforced_key='x'), AttributeError)  
 @raiseErrorIfFalseOnClass(partial(key_type_enforcer1, enforced_type=types.FunctionType, enforced_key='library_functionality'), AttributeError)
 class NormalLibraryClass(metaclass=HasEnforcedRules):
@@ -65,7 +65,6 @@ c = NormalLibraryClass(5)
 
 If we wanted `x` to be larger than 10:
 ```python
-from decorules import HasEnforcedRules
 @raiseErrorIfFalseOnInstance(partial(key_type_enforcer1, enforced_type=int, enforced_key='x'), AttributeError)  
 @raiseErrorIfFalseOnInstance(lambda ins: ins.x > 10, ValueError, "Check x-member>10")  
 @raiseErrorIfFalseOnClass(partial(key_type_enforcer1, enforced_type=types.FunctionType, enforced_key='library_functionality'), AttributeError)
