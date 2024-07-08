@@ -2,7 +2,7 @@
 
 _decorules_ is a tiny library that seeks to enforce class structure and instance behaviour on classes and their derived classes through decorators at class declaration time. Useful for library developers.
 
-The rules are specified through __decorators on the class declaration__ and using the metaclass__HasEnforcedRules__ from the library. Enforcement of the rules is done by throwing exceptions (which can be developer specified) when a predicate function fails on the class or an instance (depending on the decorator used).
+The rules are specified through __decorators on the class declaration__ and using the metaclass __HasEnforcedRules__ from the library. Enforcement of the rules is done by throwing exceptions (which can be developer specified) when a predicate function fails on the class or an instance (depending on the decorator used).
 
 In the case of rules enforced on instances, these are enforced on creation of an instance only. The rules are available throughout and can thus be applied at any point in time.
 
