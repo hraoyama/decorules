@@ -10,7 +10,7 @@ In the case of rules enforced on instances, these are enforced on creation of an
 
 Let us start with a requirement that a class or an instance must have an attribute of a certain type. Here are the basic steps:
 
-  - Create function that takes a class or an instance and checks whether a supplied attribute name exists and is of the type. In the example, we name this function `key_type_enforcer1`
+  - Create a function that takes a class or an instance and checks whether an attribute exists and is of the correct type. In the example, this function is `key_type_enforcer1`
 ```python
 from functools import partial
 
@@ -21,23 +21,21 @@ def key_type_enforcer1(instance_object, enforced_type: type, enforced_key: str):
     return type(member_object) == enforced_type
 ```
 
-  - If the function is not already a [predicate](https://stackoverflow.com/questions/1344015/what-is-a-predicate) (which it is not in our example), we can turn it into one using `partial` from the `functools` package or a user method.
-  - We then use the decorator `raiseErrorIfFalseOnClass` if we want to enforce the rule on a class level, or `raiseErrorIfFalseOnInstance` if we want to enforce the rule upon instantitation. 
+  - If the function is not already a [predicate](https://stackoverflow.com/questions/1344015/what-is-a-predicate) (which it is not in our example), turn it into one using any preferred methd (e.g., `partial` from the `functools` package)
+  - Use the decorator `raiseErrorIfFalseOnClass` when enforcing a rule on a class level, or `raiseErrorIfFalseOnInstance` when inforcing upon instantiation. 
 
-If we wanted to guarantee that a new class (and its derived classes) had implemented a function named `library_functionality` we would write:
+To guarantee that a new class (and its derived classes) implements a function named `library_functionality`:
 
 ```python
 from decorules import HasEnforcedRules
 import types
 @raiseErrorIfFalseOnClass(partial(key_type_enforcer1, enforced_type=types.FunctionType, enforced_key='library_functionality'), AttributeError)
 class NormalLibraryClass(metaclass=HasEnforcedRules):
-    def __init__(self, value=20):
-        self.x = value
     def library_functionality(self):
         return 1
 ```
 
-If in addition we also wanted to ensure that every instance had an `int` member `x` we would add:
+If in addition, we ensure that every instance had an `int` member `x`:
 
 ```python
 @raiseErrorIfFalseOnInstance(partial(key_type_enforcer1, enforced_type=int, enforced_key='x'), AttributeError)  
@@ -49,21 +47,13 @@ class NormalLibraryClass(metaclass=HasEnforcedRules):
         return 1
 ```
 
-If we were to change our `__init__` implementation to:
-```python
-...
-    def __init__(self, value=20):
-        self.y = value
-...
-```
-or remove add `del self.x` to the end of the `__init__` method, any of the following lines would throw an `AttributeError`:
+Should the `__init__` implementation not set `self.x` or remove it using `del self.x`, all of the following instantitiation would throw an `AttributeError`:
 ```python
 a = NormalLibraryClass()
 b = NormalLibraryClass(25)
 c = NormalLibraryClass(5)
 ```
-
-If we wanted `x` to be larger than 10:
+For forcing `x` to be larger than 10:
 ```python
 @raiseErrorIfFalseOnInstance(partial(key_type_enforcer1, enforced_type=int, enforced_key='x'), AttributeError)  
 @raiseErrorIfFalseOnInstance(lambda ins: ins.x > 10, ValueError, "Check x-member>10")  
@@ -74,9 +64,8 @@ class NormalLibraryClass(metaclass=HasEnforcedRules):
     def library_functionality(self):
         return 1
 ```
-Note the third argument in the decorator, this optional argument is prependend to the message of the exception. Here to provide more explanation on the predicate.
-
-Now, only the third line would raise an exception:
+Note the third argument in the decorator, this optional argument is prependend to the message of the exception. Here it is used to provide more explanation on the predicate.
+Only the third line would raise an exception:
 
 ```python
 a = NormalLibraryClass()
@@ -84,7 +73,7 @@ b = NormalLibraryClass(25)
 c = NormalLibraryClass(5) # a ValueError is raised
 ```
 
-If we wanted to ensure that a static list had a number of instances of each type we would:
+If we wanted to ensure that a static list had a number of instances of each type (e.g., 1 `string`, 2 `int` and 1 `float`):
 
 ```python
 from collections import Counter
