@@ -89,6 +89,7 @@ def test_instance_method_fails_1(key_type_enforcer):
         class NormalLibraryClass(metaclass=HasEnforcedRules):
             def __init__(self, value=20):
                 self.y = value
+        a = NormalLibraryClass()
 
 def test_instance_method_fails_2(key_type_enforcer):
     with pytest.raises(AttributeError):    
@@ -97,3 +98,4 @@ def test_instance_method_fails_2(key_type_enforcer):
             def __init__(self, value=20):
                 self.x = value
                 del self.x
+        a = NormalLibraryClass()
