@@ -22,7 +22,7 @@ def key_type_enforcer1(instance_object, enforced_type: type, enforced_key: str):
 ```
 
   - If the function is not already a [predicate](https://stackoverflow.com/questions/1344015/what-is-a-predicate) (which it is not in our example), turn it into one using any preferred method (e.g., `partial` from the `functools` package)
-  - Use the decorator `raiseErrorIfFalseOnClass` when enforcing a rule on a class level, or `raiseErrorIfFalseOnInstance` when inforcing upon instantiation. 
+  - Use the decorator `raiseErrorIfFalseOnClass` when enforcing a rule on a class level, or `raiseErrorIfFalseOnInstance` when enforcing upon instantiation. 
 
 To guarantee that a new class (and its derived classes) implements a function named `library_functionality`:
 
