@@ -6,8 +6,8 @@ def raiseErrorIfFalse(enforced_function : types.FunctionType, exception_type : B
     if extra_info is None:
         extra_info = ''
 
-    @wraps(enforced_function)      
     def raise_when_false(cls, function_name):
+        @wraps(enforced_function)      
         def raise_when_false(*args, **kwargs):
             if enforced_function(*args, **kwargs) is False:
                 if on_class:
