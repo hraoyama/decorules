@@ -31,7 +31,7 @@ class HasEnforcedRules(type):
 
         def run_functions_applied_to_class(self, cls_instance: type, bases: tuple = None):
             if len(self._functions_applied_to_class)>0:
-                print(self._functions_applied_to_class)
+                #print(self._functions_applied_to_class)
                 classes_to_check = [cls_instance]
                 if bases is not None:
                     classes_to_check.extend([x for x in bases if isinstance(x,type)])
@@ -42,7 +42,7 @@ class HasEnforcedRules(type):
             if not issubclass(type(type(instance)), HasEnforcedRules):
                 raise ValueError(f"Attempt to check functions_applied_to_instance applied on an instance of {type(instance)}, which is not of HasEnforcedRules type")
             if len(self._functions_applied_to_instance)>0:
-                print(self._functions_applied_to_instance)
+                #print(self._functions_applied_to_instance)
                 cls_keys = [type(instance).__name__]
                 bases = [x.__name__ for x in type(instance).__bases__]
                 if bases is not None:
@@ -75,17 +75,17 @@ class HasEnforcedRules(type):
             
     def __new__(cls, classname : str, baseclasses: tuple, attrs: dir):
         cls_instance = super().__new__(cls, classname, baseclasses, attrs) 
-        print(f"Class {classname} created")
+        #print(f"Class {classname} created")
         # we allow the derived classes to create a type CLASS instance however they see fit and check any class level checks here
         HasEnforcedRules.EnforcedFunctions().run_functions_applied_to_class(cls_instance, baseclasses)
-        print(f"Class {classname} and {baseclasses} checked")
+        #print(f"Class {classname} and {baseclasses} checked")
         return cls_instance
     
     def __call__(cls, *args, **kwargs):
         # Create an object instance
         instance = super().__call__(*args, **kwargs)
-        print(f"Instance of {cls.__name__} created")
+        #print(f"Instance of {cls.__name__} created")
         # we allow the derived classes to create an class instance however they see fit and check any instance level checks here
         HasEnforcedRules.EnforcedFunctions().run_functions_applied_to_instance(instance)  # all of them need to be checked at every instance creation!
-        print(f"Instance of {cls.__name__} checked")
+        #print(f"Instance of {cls.__name__} checked")
         return instance
