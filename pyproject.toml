@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "decorules"
+version = "0.0.1"
+authors = [
+  { name="hraoyama", email="hraoyama@gmail.com" },
+]
+description = "decorules is a tiny library that seeks to enforce class structure and instance behaviour on classes and their derived classes through decorators at class declaration time"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/hraoyama/decorules"
+Issues = "https://github.com/hraoyama/decorules/issues"

@@ -22,14 +22,14 @@ def key_type_enforcer1(instance_object, enforced_type: type, enforced_key: str):
 ```
 
   - If the function is not already a [predicate](https://stackoverflow.com/questions/1344015/what-is-a-predicate) (which it is not in our example), turn it into one using any preferred method (e.g., `partial` from the `functools` package)
-  - Use the decorator `raiseErrorIfFalseOnClass` when enforcing a rule on a class level, or `raiseErrorIfFalseOnInstance` when enforcing upon instantiation. 
+  - Use the decorator `raise_if_false_on_class` when enforcing a rule on a class level, or `raise_if_false_on_instance` when enforcing upon instantiation. 
 
 To guarantee that a new class (and its derived classes) implements a function named `library_functionality`:
 
 ```python
 from decorules import HasEnforcedRules
 import types
-@raiseErrorIfFalseOnClass(partial(key_type_enforcer1, enforced_type=types.FunctionType, enforced_key='library_functionality'), AttributeError)
+@raise_if_false_on_class(partial(key_type_enforcer1, enforced_type=types.FunctionType, enforced_key='library_functionality'), AttributeError)
 class NormalLibraryClass(metaclass=HasEnforcedRules):
     def library_functionality(self):
         return 1
@@ -38,8 +38,8 @@ class NormalLibraryClass(metaclass=HasEnforcedRules):
 If in addition, we ensure that every instance had an `int` member `x`:
 
 ```python
-@raiseErrorIfFalseOnInstance(partial(key_type_enforcer1, enforced_type=int, enforced_key='x'), AttributeError)  
-@raiseErrorIfFalseOnClass(partial(key_type_enforcer1, enforced_type=types.FunctionType, enforced_key='library_functionality'), AttributeError)
+@raise_if_false_on_instance(partial(key_type_enforcer1, enforced_type=int, enforced_key='x'), AttributeError)  
+@raise_if_false_on_class(partial(key_type_enforcer1, enforced_type=types.FunctionType, enforced_key='library_functionality'), AttributeError)
 class NormalLibraryClass(metaclass=HasEnforcedRules):
     def __init__(self, value=20):
         self.x = value
@@ -55,9 +55,9 @@ c = NormalLibraryClass(5)
 ```
 For forcing `x` to be larger than 10:
 ```python
-@raiseErrorIfFalseOnInstance(partial(key_type_enforcer1, enforced_type=int, enforced_key='x'), AttributeError)  
-@raiseErrorIfFalseOnInstance(lambda ins: ins.x > 10, ValueError, "Check x-member>10")  
-@raiseErrorIfFalseOnClass(partial(key_type_enforcer1, enforced_type=types.FunctionType, enforced_key='library_functionality'), AttributeError)
+@raise_if_false_on_instance(lambda ins: ins.x > 10, ValueError, "Check x-member>10")  
+@raise_if_false_on_instance(partial(key_type_enforcer1, enforced_type=int, enforced_key='x'), AttributeError)  
+@raise_if_false_on_class(partial(key_type_enforcer1, enforced_type=types.FunctionType, enforced_key='library_functionality'), AttributeError)
 class NormalLibraryClass(metaclass=HasEnforcedRules):
     def __init__(self, value=20):
         self.x = value
@@ -88,7 +88,7 @@ def min_list_type_counter(instance_object, list_name: str, min_counter: Counter)
     else:
         return False
 
-@raiseErrorIfFalseOnClass(partial(min_list_type_counter, list_name='STATIC_LIST', min_counter = Counter({str: 1, int: 2, float:1})), AttributeError)
+@raise_if_false_on_class(partial(min_list_type_counter, list_name='STATIC_LIST', min_counter = Counter({str: 1, int: 2, float:1})), AttributeError)
 class NormalLibraryClass(metaclass=HasEnforcedRules):
     STATIC_LIST = ("Test", 10, 40, 50, 45.5, 60.0, '3', 'i', BaseException())
 
