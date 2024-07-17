@@ -93,4 +93,4 @@ class NormalLibraryClass(metaclass=HasEnforcedRules):
     STATIC_LIST = ("Test", 10, 40, 50, 45.5, 60.0, '3', 'i', BaseException())
 
 ```
-When using multiple decorators in general, one must be aware that the order of decorator matters with decorator closest to the function/class applied last. With multiple decorator we must also avoid clashes between decorators.
+When using multiple decorators in general, one must be aware that the order of decorator matters with decorator closest to the function/class applied first. With multiple decorator we must also avoid clashes between decorators.
