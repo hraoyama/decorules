@@ -2,7 +2,7 @@ import types
 from collections import defaultdict
 import types
 from collections import defaultdict
-from utils import false_on_raise_else_true
+from decorules.utils import false_on_raise_else_true
 
 
 class HasEnforcedRules(type):

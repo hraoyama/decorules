@@ -2,8 +2,7 @@ import types
 from typing import Type
 from functools import wraps
 
-from has_enforced_rules import HasEnforcedRules, EnforcedFunctions
-
+from decorules.has_enforced_rules import HasEnforcedRules, EnforcedFunctions
 
 def raise_error_if_false(enforced_function: types.FunctionType,
                          exception_type: Type[BaseException],

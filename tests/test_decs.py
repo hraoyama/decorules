@@ -5,9 +5,9 @@ from functools import partial
 from collections import Counter
 from collections.abc import Iterable
 # make sure to add to python path!
-from has_enforced_rules import HasEnforcedRules
-from decorators import raise_if_false_on_class, raise_if_false_on_instance
-from predicates import key_type_enforcer, min_value, min_list_type_counter
+from decorules.has_enforced_rules import HasEnforcedRules
+from decorules.decorators import raise_if_false_on_class, raise_if_false_on_instance
+from decorules.predicates import key_type_enforcer, min_value, min_list_type_counter
 
 def test_class_method_ok_1():
     check_method_present = partial(key_type_enforcer,
