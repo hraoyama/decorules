@@ -29,8 +29,8 @@ def key_type_enforcer1(instance_or_type,
     pass
 ```
 
-2. If the function is not already a [predicate](https://stackoverflow.com/questions/1344015/what-is-a-predicate) (which it is not in our example), turn it into one using any preferred method (e.g., `partial` from the `functools` package)
-3. Use the decorator `raise_if_false_on_class` when enforcing a rule on a class level, or `raise_if_false_on_instance` when enforcing upon instantiation. 
+2. For restrictions on instances, the function must be [predicate](https://stackoverflow.com/questions/1344015/what-is-a-predicate). This means the function takes one argument (the instance) and returns a boolean. Functions can be turned into predicates using different methods, in this example we use `partial` from the `functools` package). For restrictions on classes, the function must take 2 arguments and return a boolean. The second argument should always default to `None`, it will be used to examine class attributes should this be required. Note that by defaulting the last argument to `None` in `key_type_enforcer1`, the function can be used both on instances and class declarations.  
+3. Use the decorator `raise_if_false_on_class` when enforcing a rule on a class level, or `raise_if_false_on_instance` when enforcing upon instantiation.  
 
 To guarantee that a new class (and its derived classes) implements a function named `library_functionality`:
 
@@ -89,14 +89,22 @@ If we wanted to ensure that a static list had a number of instances of each type
 from collections import Counter
 from collections.abc import Iterable
 
-def min_list_type_counter(instance_object, list_name: str, min_counter: Counter):
-    member_object = getattr(instance_object, list_name, None)
+def min_list_type_counter(instance_or_type,
+                          list_name: str,
+                          min_counter: Counter,
+                          attrs: dict = None):
+    member_object = getattr(instance_or_type, list_name, None)
+    if member_object is None:
+        if attrs is not None:
+            member_object = attrs.get(list_name, None)
     if member_object is None:
         return False
-    if isinstance(member_object, Iterable):
-        return Counter(type(x) for x in member_object) >= min_counter
     else:
-        return False
+        if isinstance(member_object, Iterable):
+            return Counter(type(x) for x in member_object) >= min_counter
+        else:
+            return False
+
 
 @raise_if_false_on_class(partial(min_list_type_counter, list_name='STATIC_LIST', min_counter = Counter({str: 1, int: 2, float:1})), AttributeError)
 class HasClassLevelMemberTypeCheckClass(metaclass=HasEnforcedRules):
