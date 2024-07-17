@@ -1,13 +1,13 @@
 import types
 from typing import Type
 from functools import wraps
-
 from decorules.has_enforced_rules import HasEnforcedRules, EnforcedFunctions
 
-def raise_error_if_false(enforced_function: types.FunctionType,
-                         exception_type: Type[BaseException],
-                         on_class: bool = True,
-                         extra_info: str = None):
+
+def _raise_error_if_false(enforced_function: types.FunctionType,
+                          exception_type: Type[BaseException],
+                          on_class: bool = True,
+                          extra_info: str = None):
     if extra_info is None:
         extra_info = ''
 
@@ -55,7 +55,6 @@ def raise_error_if_false(enforced_function: types.FunctionType,
     else:
         def function_that_adds_check_instance_class(cls):
             if 'HasEnforcedRules' not in type(cls).__name__:
-                # not issubclass(type(cls), HasEnforcedRules):
                 raise AttributeError(
                     f"{cls.__class__.__name__} must be of type {HasEnforcedRules.__class__.__name__} in order to use "
                     f"the decorator raiseErrorIfFalse on instance creation")
@@ -72,16 +71,16 @@ def raise_error_if_false(enforced_function: types.FunctionType,
 def raise_if_false_on_class(enforced_function: types.FunctionType,
                             exception_type: Type[BaseException] = Type[AttributeError],
                             extra_info: str = None):
-    return raise_error_if_false(enforced_function,
-                                exception_type,
-                                on_class=True,
-                                extra_info=extra_info)
+    return _raise_error_if_false(enforced_function,
+                                 exception_type,
+                                 on_class=True,
+                                 extra_info=extra_info)
 
 
 def raise_if_false_on_instance(enforced_function: types.FunctionType,
                                exception_type: Type[BaseException] = Type[ValueError],
                                extra_info: str = None):
-    return raise_error_if_false(enforced_function,
-                                exception_type,
-                                on_class=False,
-                                extra_info=extra_info)
+    return _raise_error_if_false(enforced_function,
+                                 exception_type,
+                                 on_class=False,
+                                 extra_info=extra_info)

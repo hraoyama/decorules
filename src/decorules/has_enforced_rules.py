@@ -7,20 +7,6 @@ from decorules.utils import false_on_raise_else_true
 
 class HasEnforcedRules(type):
 
-    # def __new__(cls,
-    #             name_of_class: str,
-    #             baseclasses: tuple,
-    #             attrs: dict
-    #             ):
-    #     # We allow the derived classes to create the type for the class
-    #     # however they see fit and check any class level on creation of the type
-    #     # hence attributes need to be passed.
-    #     # Base classes will have their own call to this __new__ with their own specific attributes
-    #     # provided, they too are of type HasEnforcedRules.
-    #     cls_instance = super().__new__(cls, name_of_class, baseclasses, attrs)
-    #     EnforcedFunctions.run_functions_applied_to_class(cls_instance, attrs)
-    #     return cls_instance
-
     def __call__(cls,
                  *args,
                  **kwargs):
@@ -30,7 +16,6 @@ class HasEnforcedRules(type):
         # however they see fit and check any instance level checks here
         # all of them need to be checked at every instance creation!
         EnforcedFunctions.run_functions_applied_to_instance(instance)
-        # print(f"Instance of {cls.__name__} checked")
         return instance
 
 
@@ -43,14 +28,16 @@ class EnforcedFunctions:
         if cls._functions_applied_to_class[cls_instance.__name__]:
             for func in cls._functions_applied_to_class[cls_instance.__name__]:
                 func(cls_instance, attrs)
-                # print(f"PASSED {func.__name__} applied to class {cls_instance.__name__}")
+            pass
+        pass
 
     @classmethod
     def _apply_functions_applied_to_instance(cls, instance, cls_key: str):
         if cls._functions_applied_to_instance[cls_key]:
             for func in cls._functions_applied_to_instance[cls_key]:
                 func(instance)
-                # print(f"PASSED {func.__name__} applied to instance {str(instance)}")
+            pass
+        pass
 
     @classmethod
     def add_enforce_function_to_class(cls,
@@ -63,7 +50,6 @@ class EnforcedFunctions:
                                          cls_key: str,
                                          func):
         cls._functions_applied_to_instance[cls_key].add(func)
-        # print((cls_key, len(cls._functions_applied_to_instance[cls_key])))
 
     @classmethod
     def run_functions_applied_to_class(cls,
@@ -72,12 +58,6 @@ class EnforcedFunctions:
         if len(cls._functions_applied_to_class) > 0:
             cls._apply_functions_applied_to_class(cls_instance, attrs)
             # the bases will get called individually with their own attrs if they are of type HasEnforcedRules
-            # print(self._functions_applied_to_class)
-            # classes_to_check = [cls_instance]
-            # if bases is not None:
-            #     classes_to_check.extend([x for x in bases if isinstance(x, type)])
-            # for x in classes_to_check:
-            #     cls._apply_functions_applied_to_class(x)
 
     @classmethod
     def run_functions_applied_to_instance(cls, instance):
@@ -85,12 +65,11 @@ class EnforcedFunctions:
             raise ValueError(
                 f"Attempt to check functions_applied_to_instance applied on an instance of {type(instance)}, "
                 f"which is not of HasEnforcedRules type")
-        # for the instance functions we do need to loop through all the bases
+        # for the instance functions we must loop through all the bases
         if len(cls._functions_applied_to_instance) > 0:
-            # print(self._functions_applied_to_instance)
             cls_keys = [type(instance).__name__]
-            bases = [x.__name__ for x in type(instance).__bases__]
-            if bases is not None:
+            bases = [x.__name__ for x in type(instance).__bases__ if x.__name__ != 'object']
+            if bases:
                 cls_keys.extend(bases)
             for cls_key in cls_keys:
                 cls._apply_functions_applied_to_instance(instance, cls_key)

@@ -2,10 +2,9 @@ import sys, os, re
 from collections import Counter
 from collections.abc import Iterable
 
-
-# this file is in theory not necessary and should be provided by the user
-# but we provide some examples here that are used in the tests
-# For the tests, do not put these in a fixture, because they get set in a class level container and key
+# this file is in theory not necessary and should be provided by the user but we provide some examples here
+# that are used in the tests. We do not put these in a fixture for pytest, because they get set in a class
+# level container and key
 
 def key_type_enforcer(instance_or_type,
                       enforced_type: type,
