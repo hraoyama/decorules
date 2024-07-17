@@ -43,14 +43,14 @@ class EnforcedFunctions:
         if cls._functions_applied_to_class[cls_instance.__name__]:
             for func in cls._functions_applied_to_class[cls_instance.__name__]:
                 func(cls_instance, attrs)
-                print(f"PASSED {func.__name__} applied to class {cls_instance.__name__}")
+                # print(f"PASSED {func.__name__} applied to class {cls_instance.__name__}")
 
     @classmethod
     def _apply_functions_applied_to_instance(cls, instance, cls_key: str):
         if cls._functions_applied_to_instance[cls_key]:
             for func in cls._functions_applied_to_instance[cls_key]:
                 func(instance)
-                print(f"PASSED {func.__name__} applied to instance {str(instance)}")
+                # print(f"PASSED {func.__name__} applied to instance {str(instance)}")
 
     @classmethod
     def add_enforce_function_to_class(cls,
@@ -63,7 +63,7 @@ class EnforcedFunctions:
                                          cls_key: str,
                                          func):
         cls._functions_applied_to_instance[cls_key].add(func)
-        print((cls_key, len(cls._functions_applied_to_instance[cls_key])))
+        # print((cls_key, len(cls._functions_applied_to_instance[cls_key])))
 
     @classmethod
     def run_functions_applied_to_class(cls,
