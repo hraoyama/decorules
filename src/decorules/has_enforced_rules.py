@@ -7,35 +7,36 @@ from utils import false_on_raise_else_true
 
 class HasEnforcedRules(type):
 
-    def __new__(cls,
-                name_of_class: str,
-                baseclasses: tuple,
-                attrs: dict
-                ):
-        cls_instance = super().__new__(cls, name_of_class, baseclasses, attrs)
-        # print(f"Class {name_of_class} created") we allow the derived classes to create a type CLASS instance however
-        # they see fit and check any class level checks here
-        # base classes will get their own call with their own attribute dict if the right metaclass
-        EnforcedFunctions.run_functions_applied_to_class(cls_instance, attrs)
-        # print(f"Class {name_of_class} and {baseclasses} checked")
-        return cls_instance
+    # def __new__(cls,
+    #             name_of_class: str,
+    #             baseclasses: tuple,
+    #             attrs: dict
+    #             ):
+    #     # We allow the derived classes to create the type for the class
+    #     # however they see fit and check any class level on creation of the type
+    #     # hence attributes need to be passed.
+    #     # Base classes will have their own call to this __new__ with their own specific attributes
+    #     # provided, they too are of type HasEnforcedRules.
+    #     cls_instance = super().__new__(cls, name_of_class, baseclasses, attrs)
+    #     EnforcedFunctions.run_functions_applied_to_class(cls_instance, attrs)
+    #     return cls_instance
 
     def __call__(cls,
                  *args,
                  **kwargs):
         # Create an object instance
         instance = super().__call__(*args, **kwargs)
-        # print(f"Instance of {cls.__name__} created") we allow the derived classes to create an class instance
+        # We allow the derived classes to create an class instance
         # however they see fit and check any instance level checks here
-        EnforcedFunctions.run_functions_applied_to_instance(instance)
         # all of them need to be checked at every instance creation!
+        EnforcedFunctions.run_functions_applied_to_instance(instance)
         # print(f"Instance of {cls.__name__} checked")
         return instance
 
 
 class EnforcedFunctions:
-    _functions_applied_to_instance = defaultdict(list)
-    _functions_applied_to_class = defaultdict(list)
+    _functions_applied_to_instance = defaultdict(set)
+    _functions_applied_to_class = defaultdict(set)
 
     @classmethod
     def _apply_functions_applied_to_class(cls, cls_instance: type, attrs: dict = None):
@@ -54,14 +55,14 @@ class EnforcedFunctions:
     @classmethod
     def add_enforce_function_to_class(cls,
                                       cls_key: str,
-                                      func: types.FunctionType):
-        cls._functions_applied_to_class[cls_key].append(func)
+                                      func):
+        cls._functions_applied_to_class[cls_key].add(func)
 
     @classmethod
     def add_enforce_function_to_instance(cls,
                                          cls_key: str,
-                                         func: types.FunctionType):
-        cls._functions_applied_to_instance[cls_key].append(func)
+                                         func):
+        cls._functions_applied_to_instance[cls_key].add(func)
         print((cls_key, len(cls._functions_applied_to_instance[cls_key])))
 
     @classmethod
