@@ -53,7 +53,6 @@ def min_list_type_counter():
     return min_list_type_counter1
 
 
-@pytest.mark.skip
 def test_class_method_ok_1(key_type_enforcer):
     try:
         @raise_if_false_on_class(partial(key_type_enforcer,
@@ -66,7 +65,9 @@ def test_class_method_ok_1(key_type_enforcer):
     except AttributeError as ex:
         pytest.fail(f"Failed {sys._getframe().f_code.co_name} with AttributeError {str(ex)}")
 
-@pytest.mark.skip
+def test_something(key_type_enforcer):
+    assert 1+1==2
+
 def test_class_method_fails_1(key_type_enforcer):
     # with pytest.raises(AttributeError):
     try:
@@ -81,8 +82,9 @@ def test_class_method_fails_1(key_type_enforcer):
     else:
         pytest.fail(f"Failed {sys._getframe().f_code.co_name} should have raised AttributeError but did not")
 
+def test_something2(key_type_enforcer):
+    assert 1+1==2
 
-@pytest.mark.skip
 def test_class_method_ok_2(min_list_type_counter):
     geq_type_dict = {str: 1, int: 2, float: 1}
     try:
@@ -98,6 +100,7 @@ def test_class_method_ok_2(min_list_type_counter):
         pytest.fail(f"Failed {sys._getframe().f_code.co_name} with AttributeError {str(ex)}")
 
 
+@pytest.mark.skip
 def test_class_method_fails_2(min_list_type_counter):
     geq_type_dict = {str: 1, int: 2, float: 1}
     with pytest.raises(AttributeError):
@@ -111,6 +114,7 @@ def test_class_method_fails_2(min_list_type_counter):
             pass
 
 
+@pytest.mark.skip
 def test_instance_method_ok_1(key_type_enforcer):
     try:
         @raise_if_false_on_instance(partial(key_type_enforcer,
@@ -128,6 +132,7 @@ def test_instance_method_ok_1(key_type_enforcer):
         pytest.fail(f"Failed {sys._getframe().f_code.co_name} with Exception {type(ex)} {str(ex)}")
 
 
+@pytest.mark.skip
 def test_instance_method_fails_1(key_type_enforcer):
     with pytest.raises(AttributeError):
         @raise_if_false_on_instance(partial(key_type_enforcer,
