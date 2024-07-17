@@ -33,6 +33,12 @@ def main():
     except ValueError as ve:
         print(ve)
         pass
+    try:
+        f = ClientClass("f",0.8,0.8,0.4)
+        f.testme()
+    except ValueError as ve:
+        print(ve)
+        pass
 
 if __name__ == "__main__":
     main()
