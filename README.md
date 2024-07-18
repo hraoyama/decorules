@@ -48,7 +48,7 @@ def key_type_enforcer(instance_or_type,
 ```
 
 2. For restrictions on instances, the function must be [predicate](https://stackoverflow.com/questions/1344015/what-is-a-predicate). This means the function takes one argument (the instance) and returns a boolean. Functions can be turned into predicates using different methods, in this example we will use `partial` from the `functools` package). For restrictions on classes that do not check the values of attributes (e.g., check if a static float is positive) predicate functions can be provided. If the rule on the class does make use of such a value, the function must take 2 arguments and return a boolean. The second argument should always default to `None`[^1].  
-3. Use the decorator `raise_if_false_on_class` when enforcing a rule on a class level, or `raise_if_false_on_instance` when enforcing upon instantiation. Both decorators take 1 compulsory argument (the function from 2. that return a True/False value) and 2 optional arguments, the first is the type of the exception to be raised should the rule not hold[^2] and the second optional argument is a string providing extra information when the exception is raised.
+3. Use the decorator `raise_if_false_on_class` when enforcing a rule on a class level, or `raise_if_false_on_instance` when enforcing upon instantiation. Both decorators take 1 compulsory argument (the function from step 2. which returns a True/False value) and 2 optional arguments, the first is the type of the exception to be raised should the rule not hold[^2] and the second optional argument is a string providing extra information when the exception is raised.
 
 In order to guarantee that the class (and its derived classes) implements a function named `library_functionality` we would implement:
 
@@ -135,4 +135,4 @@ When using multiple decorators in general, one must be aware that the order of d
 Though not intended for this use, the enforced rules (through predicate functions) are available through the `EnforcedFunctions` static class and can thus be retrieved, applied and transferred at any point in the code.
 
 [^1]: The second argument will be used to examine class attributes when required. Note that by always providing a second argument and defaulting it to `None` (as was done in `key_type_enforcer`), the function can be used both on instances and class declarations.
-[^2]: Note that this is an exception type and not an instance. For rules on classes this defaults to `AttributeError`, for rules of instantiation this defaults to `ValueError`. Other exceptions or classes (including user defined ones) can be provided if they can be constructed from a string 
+[^2]: Note that this is an exception type and not an instance. For rules on classes this defaults to `AttributeError`, for rules of instantiation this defaults to `ValueError`. Other exceptions or classes (including user defined ones) can be supplied, provided instances can be constructed from a string 
