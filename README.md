@@ -135,4 +135,4 @@ When using multiple decorators in general, one must be aware that the order of d
 Though not intended for this use, the enforced rules (through predicate functions) are available through the `EnforcedFunctions` static class and can thus be retrieved, applied and transferred at any point in the code.
 
 [^1]: The second argument will be used to examine class attributes when required. Note that by always providing a second argument and defaulting it to `None` (as was done in `key_type_enforcer`), the function can be used both on instances and class declarations.
-[^2]: Note that this is an exception type and not an instance. For rules on classes this defaults to `AttributeError`, for rules of instantiation this defaults to `ValueError`. Other exceptions or classes (including user defined ones) can be provided if they can be constructed from a string 
+[^2]: Note that this is an exception type and not an instance. For rules on classes this defaults to `AttributeError`, for rules of instantiation this defaults to `ValueError`. Other exceptions or classes (including user defined ones) can be supplied, provided instances can be constructed from a string 
