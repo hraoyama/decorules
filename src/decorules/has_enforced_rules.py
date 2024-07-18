@@ -62,7 +62,7 @@ class EnforcedFunctions:
     @classmethod
     def run_functions_applied_to_instance(cls, instance):
         if not issubclass(type(type(instance)), HasEnforcedRules):
-            raise ValueError(
+            raise TypeError(
                 f"Attempt to check functions_applied_to_instance applied on an instance of {type(instance)}, "
                 f"which is not of HasEnforcedRules type")
         # for the instance functions we must loop through all the bases
