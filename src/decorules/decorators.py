@@ -42,9 +42,9 @@ def _raise_error_if_false(enforced_function: types.FunctionType,
         def wrapped_class(cls):
             if 'HasEnforcedRules' not in type(cls).__name__:
                 # not issubclass(type(cls), HasEnforcedRules):
-                raise AttributeError(
+                raise TypeError(
                     f"{cls.__class__.__name__} must be of type {HasEnforcedRules.__class__.__name__} in order to "
-                    f"use the decorator raise_error_if_false")
+                    f"use the decorator _raise_error_if_false")
             function_name = str(enforced_function)
             func_to_add = raise_when_false(cls, function_name)
             EnforcedFunctions.add_enforce_function_to_class(cls.__name__, func_to_add)
@@ -55,7 +55,7 @@ def _raise_error_if_false(enforced_function: types.FunctionType,
     else:
         def function_that_adds_check_instance_class(cls):
             if 'HasEnforcedRules' not in type(cls).__name__:
-                raise AttributeError(
+                raise TypeError(
                     f"{cls.__class__.__name__} must be of type {HasEnforcedRules.__class__.__name__} in order to use "
                     f"the decorator raiseErrorIfFalse on instance creation")
             function_name = str(enforced_function)

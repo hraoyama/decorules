@@ -23,18 +23,13 @@ def test_class_method_ok_1():
 
 
 def test_class_method_fails_1():
-    # with pytest.raises(AttributeError):
-    check_method_present = partial(key_type_enforcer,
-                                   enforced_type=types.FunctionType,
-                                   enforced_key='library_functionality')
-    try:
+    with pytest.raises(AttributeError):
+        check_method_present = partial(key_type_enforcer,
+                                       enforced_type=types.FunctionType,
+                                       enforced_key='library_functionality')
         @raise_if_false_on_class(check_method_present, AttributeError)
         class MissingCorrectMethodClass(metaclass=HasEnforcedRules):
             pass
-    except AttributeError as ex:
-        pass
-    else:
-        pytest.fail(f"Failed {sys._getframe().f_code.co_name} should have raised AttributeError but did not")
 
 def test_class_attribute_ok_2():
     geq_type_dict = {str: 1, int: 2, float: 1}
@@ -104,3 +99,19 @@ def test_instance_method_fails_2():
                 del self.x
 
         a = HasDeletedInstanceMemberVariable()
+
+def test_class_type_wrong_fails_1():
+    with pytest.raises(TypeError):
+        check_method_present = partial(key_type_enforcer,
+                                       enforced_type=types.FunctionType,
+                                       enforced_key='foo')
+        @raise_if_false_on_class(check_method_present, AttributeError, 'Checks if foo method exists')
+        class NotRightTypeClass:
+            def foo(self):
+                print(f"Executing method {sys._getframe().f_code.co_name}")
+
+
+
+
+
+
