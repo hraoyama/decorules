@@ -66,8 +66,14 @@ class HasCorrectMethodClass(metaclass=HasEnforcedRules):
 If in addition, we ensure that an `int` member named `x` existed after every instantiation:
 
 ```python
-@raise_if_false_on_instance(partial(key_type_enforcer, enforced_type=int, enforced_key='x'), AttributeError)  
-@raise_if_false_on_class(partial(key_type_enforcer, enforced_type=types.FunctionType, enforced_key='library_functionality'), AttributeError)
+@raise_if_false_on_instance(partial(key_type_enforcer,
+                                    enforced_type=int,
+                                    enforced_key='x'),
+                            AttributeError)  
+@raise_if_false_on_class(partial(key_type_enforcer,
+                                 enforced_type=types.FunctionType,
+                                 enforced_key='library_functionality'),
+                         AttributeError)
 class HasCorrectMethodAndInstanceVarClass(metaclass=HasEnforcedRules):
     def __init__(self, value=20):
         self.x = value
