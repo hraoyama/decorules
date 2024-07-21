@@ -130,7 +130,10 @@ def min_list_type_counter(instance_or_type,
             return False
 
 
-@raise_if_false_on_class(partial(min_list_type_counter, list_name='STATIC_SET', min_counter = Counter({str: 1, int: 2, float:1})), AttributeError)
+@raise_if_false_on_class(partial(min_list_type_counter,
+                                 list_name='STATIC_SET',
+                                 min_counter = Counter({str: 1, int: 2, float:1})),
+                         AttributeError)
 class HasClassLevelMemberTypeCheckClass(metaclass=HasEnforcedRules):
     STATIC_SET = ("Test", 10, 40, 50, 45.5, 60.0, '3', 'i', BaseException())
 
