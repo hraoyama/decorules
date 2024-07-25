@@ -8,7 +8,7 @@ The primary objective is to help library developers enforce behavior on derived 
 
 The rules are specified through __decorators on the class declaration__ and using the metaclass __HasEnforcedRules__ from the library. Enforcement of the rules is done by throwing exceptions (which can be developer specified) when a predicate function fails on the class or an instance (depending on the decorator used).
 
-In the case of rules enforced on instances, these are enforced on creation of an instance only. 
+By default, rules enforced on instances are enforced on creation of an instance only. It is possible to enforce these rules on any member function call by using a decorator on the method. 
 
 
 ## Installation
@@ -49,6 +49,7 @@ def key_type_enforcer(instance_or_type,
 
 2. For restrictions on instances, the function must be [predicate](https://stackoverflow.com/questions/1344015/what-is-a-predicate). This means the function takes one argument (the instance) and returns a boolean. Functions can be turned into predicates using different methods, in this example we will use `partial` from the `functools` package. For restrictions on classes that do not check the values of attributes (e.g., check if a static float is positive) predicate functions can be provided. If the rule on the class does make use of such a value, the function must take 2 arguments and return a boolean. The second argument should always default to `None`[^1].  
 3. Use the decorator `raise_if_false_on_class` when enforcing a rule on a class level, or `raise_if_false_on_instance` when enforcing upon instantiation. Both decorators take 1 compulsory argument (the function from step 2. which returns a True/False value) and 2 optional arguments, the first is the type of the exception to be raised should the rule not hold[^2] and the second optional argument is a string providing extra information when the exception is raised.
+4. The rules on instances are only applied after the call to `__init__`. We have the option to add the `enforces_instance_rules` decorator to any method of the class, thereby enforcing the instance rules after each method call.
 
 In order to guarantee that the class (and its derived classes) implements a function named `library_functionality` we would implement:
 
@@ -57,7 +58,10 @@ from decorules import HasEnforcedRules
 import types
 from functools import partial
 
-@raise_if_false_on_class(partial(key_type_enforcer, enforced_type=types.FunctionType, enforced_key='library_functionality'), AttributeError)
+@raise_if_false_on_class(partial(key_type_enforcer, 
+                                 enforced_type=types.FunctionType, 
+                                 enforced_key='library_functionality'), 
+                         AttributeError)
 class HasCorrectMethodClass(metaclass=HasEnforcedRules):
     def library_functionality(self):
         return 1
@@ -124,9 +128,29 @@ def min_list_type_counter(instance_or_type,
             return False
 
 
-@raise_if_false_on_class(partial(min_list_type_counter, list_name='STATIC_SET', min_counter = Counter({str: 1, int: 2, float:1})), AttributeError)
+@raise_if_false_on_class(partial(min_list_type_counter, 
+                                 list_name='STATIC_SET', 
+                                 min_counter = Counter({str: 1, int: 2, float:1})), 
+                         AttributeError)
 class HasClassLevelMemberTypeCheckClass(metaclass=HasEnforcedRules):
     STATIC_SET = ("Test", 10, 40, 50, 45.5, 60.0, '3', 'i', BaseException())
+
+```
+If we wanted to raise an exception as soon as a member value reaches the value 10 during the course of the process:
+```python
+@raise_if_false_on_instance(lambda x: x.y<10, ValueError)
+class HasMethodCheckedAndFailsAfterCall(metaclass=HasEnforcedRules):
+    def __init__(self, value=20):
+        self.y = value
+    @enforces_instance_rules
+    def add(self, value=0):
+        self.y += value
+
+a = HasMethodCheckedAndFailsAfterCall(0)
+a.add(1)
+a.add(1)
+a.add(1)
+a.add(10)  # will raise a ValueError
 
 ```
 

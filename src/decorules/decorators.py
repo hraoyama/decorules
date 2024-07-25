@@ -84,3 +84,12 @@ def raise_if_false_on_instance(enforced_function: types.FunctionType,
                                  exception_type,
                                  on_class=False,
                                  extra_info=extra_info)
+
+
+def enforces_instance_rules(input_method):
+    @wraps(input_method)
+    def wrapped_method(self, *args, **kwargs):
+        input_method(self, *args, **kwargs)
+        EnforcedFunctions.run_functions_applied_to_instance(self)
+
+    return wrapped_method

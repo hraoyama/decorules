@@ -6,8 +6,21 @@ from collections import Counter
 from collections.abc import Iterable
 # make sure to add to python path!
 from decorules.has_enforced_rules import HasEnforcedRules
-from decorules.decorators import raise_if_false_on_class, raise_if_false_on_instance
+from decorules.decorators import raise_if_false_on_class, raise_if_false_on_instance, enforces_instance_rules
 from decorules.predicates import key_type_enforcer, min_value, min_list_type_counter
+
+
+def test_class_type_wrong_fails_1():
+    with pytest.raises(TypeError):
+        check_method_present = partial(key_type_enforcer,
+                                       enforced_type=types.FunctionType,
+                                       enforced_key='foo')
+
+        @raise_if_false_on_class(check_method_present, AttributeError, 'Checks if foo method exists')
+        class NotRightTypeClass:
+            def foo(self):
+                print(f"Executing method {sys._getframe().f_code.co_name}")
+
 
 def test_class_method_ok_1():
     check_method_present = partial(key_type_enforcer,
@@ -27,16 +40,18 @@ def test_class_method_fails_1():
         check_method_present = partial(key_type_enforcer,
                                        enforced_type=types.FunctionType,
                                        enforced_key='library_functionality')
+
         @raise_if_false_on_class(check_method_present, AttributeError)
         class MissingCorrectMethodClass(metaclass=HasEnforcedRules):
             pass
 
+
 def test_class_attribute_ok_2():
     geq_type_dict = {str: 1, int: 2, float: 1}
     static_member_name = "STATIC_SET"
-    check_has_enough_of_type = partial( min_list_type_counter,
-                                        list_name=static_member_name,
-                                        min_counter=Counter(geq_type_dict))
+    check_has_enough_of_type = partial(min_list_type_counter,
+                                       list_name=static_member_name,
+                                       min_counter=Counter(geq_type_dict))
     try:
         @raise_if_false_on_class(check_has_enough_of_type,
                                  AttributeError,
@@ -46,6 +61,7 @@ def test_class_attribute_ok_2():
             pass
     except AttributeError as ex:
         pytest.fail(f"Failed {sys._getframe().f_code.co_name} with AttributeError {str(ex)}")
+
 
 def test_class_method_fails_2():
     geq_type_dict = {str: 1, int: 2, float: 1}
@@ -100,16 +116,65 @@ def test_instance_method_fails_2():
 
         a = HasDeletedInstanceMemberVariable()
 
-def test_class_type_wrong_fails_1():
-    with pytest.raises(TypeError):
-        check_method_present = partial(key_type_enforcer,
-                                       enforced_type=types.FunctionType,
-                                       enforced_key='foo')
-        @raise_if_false_on_class(check_method_present, AttributeError, 'Checks if foo method exists')
-        class NotRightTypeClass:
-            def foo(self):
-                print(f"Executing method {sys._getframe().f_code.co_name}")
+def test_instance_on_method_ok_1():
+    @raise_if_false_on_instance(partial(key_type_enforcer,
+                                        enforced_type=int,
+                                        enforced_key='y'), AttributeError)
+    @raise_if_false_on_instance(lambda x: x.y < 10, ValueError)
+    class HasMethodCheckedOKAfterCall(metaclass=HasEnforcedRules):
+        def __init__(self, value=20):
+            self.y = value
 
+        @enforces_instance_rules
+        def add(self, value=0):
+            self.y += value
+
+    a = HasMethodCheckedOKAfterCall(0)
+    a.add(1)
+    a.add(1)
+    a.add(1)
+
+
+def test_instance_on_method_fails_1():
+    @raise_if_false_on_instance(partial(key_type_enforcer,
+                                        enforced_type=int,
+                                        enforced_key='y'), AttributeError)
+    @raise_if_false_on_instance(lambda x: x.y<10, ValueError)
+    class HasMethodCheckedAndFailsAfterCall(metaclass=HasEnforcedRules):
+        def __init__(self, value=20):
+            self.y = value
+        @enforces_instance_rules
+        def add(self, value=0):
+            self.y += value
+
+    a = HasMethodCheckedAndFailsAfterCall(0)
+    a.add(1)
+    a.add(1)
+    a.add(1)
+    with pytest.raises(ValueError):
+        a.add(10)
+
+def test_instance_on_method_ok_2():
+    @raise_if_false_on_instance(partial(key_type_enforcer,
+                                        enforced_type=int,
+                                        enforced_key='y'), AttributeError)
+    @raise_if_false_on_instance(lambda x: x.y < 10, ValueError)
+    class HasMethodCheckedOKAfterCall2(metaclass=HasEnforcedRules):
+        def __init__(self, value=20):
+            self.y = value
+
+        @enforces_instance_rules
+        def add(self, value=0):
+            self.y += value
+
+    a = HasMethodCheckedOKAfterCall2(0)
+    a.add(1)
+    a.add(1)
+    a.add(1)
+    a.add(1)
+    a.add(-10)
+    a.add(1)
+    a.add(10)
 
 
 
