@@ -2,7 +2,7 @@
 
 ## Introduction
 
-_decorules_ is a tiny python library that seeks to enforce rules on class structure and instantiation behavior for classes and class hierarchies through decorators at the point of class declaration. 
+_decorules_ is a tiny python library that seeks to enforce rules on class structure and instance behavior for classes and class hierarchies through decorators at the point of class declaration. 
 
 The primary objective is to help library developers enforce behavior on derived classes. Secondary benefits are defensive measures, for instance to quickly have an overview of any structural rules enforced on the class.
 
