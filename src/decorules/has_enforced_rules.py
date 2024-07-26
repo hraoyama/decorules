@@ -5,6 +5,20 @@ from collections import defaultdict
 from decorules.utils import false_on_raise_else_true
 
 
+def get_all_base_classes(cls):
+    """
+    Recursively get all base classes for a given class.
+    Args:
+        cls (type): The class to inspect.
+    Returns:
+        set: A set of all base classes (types).
+    """
+    bases = set(cls.__bases__)
+    for base in cls.__bases__:
+        bases.update(get_all_base_classes(base))
+    return bases
+
+
 class HasEnforcedRules(type):
 
     def __call__(cls,
@@ -68,7 +82,7 @@ class EnforcedFunctions:
         # for the instance functions we must loop through all the bases
         if len(cls._functions_applied_to_instance) > 0:
             cls_keys = [type(instance).__name__]
-            bases = [x.__name__ for x in type(instance).__bases__ if issubclass(type(x), HasEnforcedRules)]
+            bases = [x.__name__ for x in get_all_base_classes(type(instance)) if issubclass(type(x), HasEnforcedRules)]
             if bases:
                 cls_keys.extend(bases)
             for cls_key in cls_keys:

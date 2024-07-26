@@ -40,6 +40,19 @@ class SomeOtherClass(SomeBaseClass):
         print(f"Executing method {sys._getframe().f_code.co_name}")
         pass
 
+class LayerClass1(ClientClass):
+    pass
+
+class LayerClass2(LayerClass1):
+    pass
+
+class LayerClass3(LayerClass2):
+    pass
+
+class LayerClass4(LayerClass3):
+    pass
+
+
 
 def main():
     a = LibraryClass("a")
@@ -94,6 +107,15 @@ def main():
         print(te)
         pass
 
+    j = LayerClass4("j", 0.1, 0.1, 0.05)
+    j.append(0.06)  # should not break an instance rule#
+    print(j.coordinates)
+    try:
+        j.append(max(j.coordinates) * LayerClass4.MULTIPLIER)  # should break
+    except ValueError as ve:
+        print(ve)
+        pass
+    print(j.coordinates)
 
 if __name__ == "__main__":
     main()
