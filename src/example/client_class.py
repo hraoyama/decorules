@@ -1,4 +1,5 @@
 import types
+import sys
 from library_class import LibraryClass
 from decorules.decorators import raise_if_false_on_class, raise_if_false_on_instance, enforces_instance_rules
 
@@ -23,6 +24,7 @@ class ClientClass(LibraryClass):
 
 class SomeBaseClass:
     def foo(self):
+        print(f"Executing method {sys._getframe().f_code.co_name}")
         pass
 
 
@@ -30,6 +32,13 @@ class MultipleInheritanceClass(SomeBaseClass, ClientClass):
     @enforces_instance_rules
     def multiply_multiplier(self, value=1.0):
         self.MULTIPLIER = self.MULTIPLIER * value
+
+
+class SomeOtherClass(SomeBaseClass):
+    @enforces_instance_rules
+    def foo(self):
+        print(f"Executing method {sys._getframe().f_code.co_name}")
+        pass
 
 
 def main():
@@ -77,6 +86,12 @@ def main():
         h.testme()
     except ValueError as ve:
         print(ve)
+        pass
+    i = SomeOtherClass()
+    try:
+        i.foo()
+    except TypeError as te:
+        print(te)
         pass
 
 
