@@ -68,7 +68,7 @@ class EnforcedFunctions:
         # for the instance functions we must loop through all the bases
         if len(cls._functions_applied_to_instance) > 0:
             cls_keys = [type(instance).__name__]
-            bases = [x.__name__ for x in type(instance).__bases__ if x.__name__ != 'object']
+            bases = [x.__name__ for x in type(instance).__bases__ if issubclass(type(x), HasEnforcedRules)]
             if bases:
                 cls_keys.extend(bases)
             for cls_key in cls_keys:
