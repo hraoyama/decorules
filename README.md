@@ -96,13 +96,27 @@ class HasCorrectMethodAndInstanceVarCheckClass(metaclass=HasEnforcedRules):
     def library_functionality(self):
         return 1
 ```
-Note the third argument in the decorator, this will be prependend to the message of the exception. 
+Note the third argument in the decorator, this will be prepended to the message of the exception. 
 For the implementation above, only the third line would raise an exception:
 
 ```python
 a = HasCorrectMethodAndInstanceVarCheckClass()
 b = HasCorrectMethodAndInstanceVarCheckClass(25)
 c = HasCorrectMethodAndInstanceVarCheckClass(5) # a ValueError is raised
+```
+Because the key-type + comparison paradigm is expected to be widely used for classes and instances, _decorules_ provides a utility for this called `member_enforcer`[^3]. The previous snippet could have been simplified using:
+
+```python
+import operator
+from decorules.utils import member_enforcer
+
+@raise_if_false_on_instance(member_enforcer('x',int, 10, operator.gt), ValueError, "Check x-member>10")
+@raise_if_false_on_class(member_enforcer('library_functionality', types.FunctionType), AttributeError)
+class HasCorrectMethodAndInstanceVarCheckClass(metaclass=HasEnforcedRules):
+    def __init__(self, value=20):
+        self.x = value
+    def library_functionality(self):
+        return 1
 ```
 
 If we wanted to ensure that a static set had a minimum number of instances of each type (e.g., 1 `string`, 2 `int` and 1 `float`):
@@ -160,3 +174,4 @@ Though not intended for this use, the enforced rules (through predicate function
 
 [^1]: The second argument will be used to examine class attributes when required. Note that by always providing a second argument and defaulting it to `None` (as was done in `key_type_enforcer`), the function can be used both on instances and class declarations.
 [^2]: Note that this is an exception type and not an instance. For rules on classes this defaults to `AttributeError`, for rules of instantiation this defaults to `ValueError`. Other exceptions or classes (including user defined ones) can be supplied, provided instances can be constructed from a string 
+[^3]: `member_enforcer` has 2 compulsory arguments: the `enforced_key` (a string with the attribute name) and the `enforced_type` (the type of the attribute) and 2 optional arguments: the `comparison_value` and the `operator_used`, the latter defaults to the boolean equality operator and is only applied if a value is provided. 
