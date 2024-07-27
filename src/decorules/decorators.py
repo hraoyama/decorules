@@ -93,3 +93,4 @@ def enforces_instance_rules(input_method):
         EnforcedFunctions.run_functions_applied_to_instance(self)
 
     return wrapped_method
+

@@ -1,13 +1,15 @@
 import pytest
 import types
 import sys
+import operator
 from functools import partial
 from collections import Counter
-from collections.abc import Iterable
-# make sure to add to python path!
 from decorules.has_enforced_rules import HasEnforcedRules
-from decorules.decorators import raise_if_false_on_class, raise_if_false_on_instance, enforces_instance_rules
+from decorules.decorators import (raise_if_false_on_class,
+                                  raise_if_false_on_instance,
+                                  enforces_instance_rules)
 from decorules.predicates import key_type_enforcer, min_value, min_list_type_counter
+from decorules.utils import member_enforcer
 
 
 def test_class_type_wrong_fails_1():
@@ -116,6 +118,7 @@ def test_instance_method_fails_2():
 
         a = HasDeletedInstanceMemberVariable()
 
+
 def test_instance_on_method_ok_1():
     @raise_if_false_on_instance(partial(key_type_enforcer,
                                         enforced_type=int,
@@ -139,10 +142,11 @@ def test_instance_on_method_fails_1():
     @raise_if_false_on_instance(partial(key_type_enforcer,
                                         enforced_type=int,
                                         enforced_key='y'), AttributeError)
-    @raise_if_false_on_instance(lambda x: x.y<10, ValueError)
+    @raise_if_false_on_instance(lambda x: x.y < 10, ValueError)
     class HasMethodCheckedAndFailsAfterCall(metaclass=HasEnforcedRules):
         def __init__(self, value=20):
             self.y = value
+
         @enforces_instance_rules
         def add(self, value=0):
             self.y += value
@@ -153,6 +157,7 @@ def test_instance_on_method_fails_1():
     a.add(1)
     with pytest.raises(ValueError):
         a.add(10)
+
 
 def test_instance_on_method_ok_2():
     @raise_if_false_on_instance(partial(key_type_enforcer,
@@ -177,6 +182,52 @@ def test_instance_on_method_ok_2():
     a.add(10)
 
 
+def test_class_type_wrong_fails_using_util_1():
+    with pytest.raises(TypeError):
+        @raise_if_false_on_class(member_enforcer(enforced_type=types.FunctionType, enforced_key='foo'),
+                                 AttributeError,
+                                 'Checks if foo method exists')
+        class NotRightTypeUsingUtilClass:
+            def foo(self):
+                print(f"Executing method {sys._getframe().f_code.co_name}")
 
 
+def test_class_method_ok_using_util_1():
+    try:
+        @raise_if_false_on_class(member_enforcer('library_functionality', types.FunctionType), AttributeError)
+        class HasCorrectMethodUsingUtilClass(metaclass=HasEnforcedRules):
+            def library_functionality(self):
+                return 1
+    except AttributeError as ex:
+        pytest.fail(f"Failed {sys._getframe().f_code.co_name} with AttributeError {str(ex)}")
+
+
+def test_class_method_ok_using_util_2():
+    try:
+        @raise_if_false_on_class(member_enforcer('static_member', int, 20), AttributeError)
+        class HasStaticUsingDecClass(metaclass=HasEnforcedRules):
+            static_member = 20
+    except AttributeError as ex:
+        pytest.fail(f"Failed {sys._getframe().f_code.co_name} with AttributeError {str(ex)}")
+
+def test_class_method_ok_using_util_3():
+    try:
+        @raise_if_false_on_class(member_enforcer('static_member', int, 20, operator.gt), AttributeError)
+        class HasLargeEnoughStaticUsingDecClass(metaclass=HasEnforcedRules):
+            static_member = 25
+    except AttributeError as ex:
+        pytest.fail(f"Failed {sys._getframe().f_code.co_name} with AttributeError {str(ex)}")
+
+def test_class_method_fails_using_util_1():
+    with pytest.raises(AttributeError):
+        @raise_if_false_on_class(
+            member_enforcer(enforced_type=types.FunctionType, enforced_key='library_functionality'), AttributeError)
+        class MissingCorrectMethodUsingDecClass(metaclass=HasEnforcedRules):
+            pass
+
+def test_class_method_fails_using_util_2():
+    with pytest.raises(AttributeError):
+        @raise_if_false_on_class(member_enforcer('static_member', int, 20, operator.lt), AttributeError)
+        class HasTooLargeStaticUsingDecClass(metaclass=HasEnforcedRules):
+            static_member = 25
 

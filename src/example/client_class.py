@@ -10,7 +10,8 @@ smallest_coordinate_times_multiplier_larger_than_largest = lambda x: min(x.coord
 
 @raise_if_false_on_instance(smallest_coordinate_times_multiplier_larger_than_largest,
                             ValueError,
-                            "Checks that the multiplier times the smallest coordinate is larger than the largest coordinate")
+                            "Checks that the multiplier times the smallest coordinate is larger than the largest "
+                            "coordinate")
 @raise_if_false_on_class(is_multiplier_larger_than_1,
                          AttributeError,
                          "Checks that the multiplier is larger than 2.0")
@@ -40,18 +41,21 @@ class SomeOtherClass(SomeBaseClass):
         print(f"Executing method {sys._getframe().f_code.co_name}")
         pass
 
+
 class LayerClass1(ClientClass):
     pass
+
 
 class LayerClass2(LayerClass1):
     pass
 
+
 class LayerClass3(LayerClass2):
     pass
 
+
 class LayerClass4(LayerClass3):
     pass
-
 
 
 def main():
@@ -109,13 +113,12 @@ def main():
 
     j = LayerClass4("j", 0.1, 0.1, 0.05)
     j.append(0.06)  # should not break an instance rule#
-    print(j.coordinates)
     try:
         j.append(max(j.coordinates) * LayerClass4.MULTIPLIER)  # should break
     except ValueError as ve:
         print(ve)
         pass
-    print(j.coordinates)
+
 
 if __name__ == "__main__":
     main()
