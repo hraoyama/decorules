@@ -6,18 +6,6 @@ from decorules.predicates import key_type_enforcer
 from decorules.utils import member_enforcer
 from collections.abc import Iterable
 
-
-def key_structure_enforcer(input_type,
-                           enforced_type: type,
-                           enforced_key: str):
-    member_object = getattr(input_type, enforced_key, None)
-    if member_object is None:
-        return False
-    else:
-        return issubclass(type(member_object), enforced_type)
-    pass
-
-
 are_coordinates_within_distance_1 = lambda y: (sum([x ** 2 for x in y.coordinates]) ** 0.5) <= 1.0
 
 

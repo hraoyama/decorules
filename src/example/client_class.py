@@ -14,7 +14,7 @@ smallest_coordinate_times_multiplier_larger_than_largest = lambda x: min(x.coord
                             "coordinate")
 @raise_if_false_on_class(is_multiplier_larger_than_1,
                          AttributeError,
-                         "Checks that the multiplier is larger than 2.0")
+                         "Checks that the multiplier is larger than 1.0")
 class ClientClass(LibraryClass):
     MULTIPLIER = 2.5
 
