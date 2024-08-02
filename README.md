@@ -46,11 +46,6 @@ def key_type_enforcer(instance_or_type,
         return issubclass(type(member_object), enforced_type)
     pass
 ```
-
-2. For restrictions on instances, the function must be [predicate](https://stackoverflow.com/questions/1344015/what-is-a-predicate). This means the function takes one argument (the instance) and returns a boolean. Functions can be turned into predicates using different methods, in this example we will use `partial` from the `functools` package. For restrictions on classes that do not check the values of attributes predicate functions can be provided. If the rule on the class does make use of such a value (e.g., check if a static float is positive), the function must take 2 arguments and return a boolean. The second argument should always default to `None`[^1].  
-3. Use the decorator `raise_if_false_on_class` when enforcing a rule on a class level, or `raise_if_false_on_instance` when enforcing upon instantiation. Both decorators take 1 compulsory argument (the function from step 2. which returns a True/False value) and 2 optional arguments, the first is the type of the exception to be raised should the rule not hold[^2] and the second optional argument is a string providing extra information when the exception is raised.
-4. The rules on instances are only applied after the call to `__init__`. We have the option to add the `enforces_instance_rules` decorator to any method of the class, thereby enforcing the instance rules after each method call.
-
 In order to guarantee that the class (and its derived classes) implements a function named `library_functionality` we would implement:
 
 ```python
@@ -66,6 +61,11 @@ class HasCorrectMethodClass(metaclass=HasEnforcedRules):
     def library_functionality(self):
         return 1
 ```
+
+2. For restrictions on instances, the function must be [predicate](https://stackoverflow.com/questions/1344015/what-is-a-predicate). This means the function takes one argument (the instance) and returns a boolean. Functions can be turned into predicates using different methods, in this example we will use `partial` from the `functools` package. For restrictions on classes that do not check the values of attributes predicate functions can be provided. If the rule on the class does make use of such a value (e.g., check if a static float is positive), the function must take 2 arguments and return a boolean. The second argument should always default to `None`[^1].  
+3. Use the decorator `raise_if_false_on_class` when enforcing a rule on a class level, or `raise_if_false_on_instance` when enforcing upon instantiation. Both decorators take 1 compulsory argument (the function from step 2. which returns a True/False value) and 2 optional arguments, the first is the type of the exception to be raised should the rule not hold[^2] and the second optional argument is a string providing extra information when the exception is raised.
+4. The rules on instances are only applied after the call to `__init__`. We have the option to add the `enforces_instance_rules` decorator to any method of the class, thereby enforcing the instance rules after each method call.
+
 
 If in addition, we ensure that an `int` member named `x` existed after every instantiation:
 
