@@ -18,7 +18,9 @@ The decorators employed are:
 
 All rules and actions are specified through the __decorators on the class declaration__ and using the metaclass __HasRulesActions__ from the library. 
 
-Enforcement of the rules is done by throwing exceptions (which can be developer specified) when a predicate function fails.
+Enforcement of the rules is done by throwing exceptions (which can be developer specified) when a predicate function fails. 
+
+The actions taken when a predicate fails are supplied by the user through functions taking the instance as argument. 
 
 
 ## Installation
