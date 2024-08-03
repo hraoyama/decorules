@@ -179,7 +179,7 @@ a.add(10)  # will raise a ValueError
 
 ```
 
-To illustrate the triggering of functionality we create the following contrived example: a `ProducerClass` manages an integer resource that has be >=0 and <100. Every time a value larger than or equal to 20 is produced, it passes the value to an instance of `LargeNumberProcessor`. If the latter is passed a value larger than or equal to 50 it raises an exception. If the average of unprocessed values in its list is larger than 30, all of the values to process will get halved.
+To illustrate the triggering of functionality we create the following contrived example: a `ProducerClass` manages an integer resource that has be >=0 and <100. Every time a value larger than or equal to 20 is produced, it passes the value to an instance of `LargeNumberProcessor`. If the latter is passed a value larger than or equal to 50 it raises an exception. If the average of unprocessed values in its list is larger than or equal to 30, all of the values to process will get halved.
 
 ```python
 def is_m_positive_and_lt_100(instance):
