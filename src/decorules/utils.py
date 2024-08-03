@@ -1,5 +1,10 @@
 from functools import wraps, partial
+from enum import Enum
 import operator
+
+class Purpose(Enum):
+    RULE = 1
+    ACTION = 2
 
 
 def member_enforcer(enforced_key: str,

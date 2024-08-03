@@ -1,6 +1,7 @@
+import operator
 import types
 from functools import partial
-from decorules.has_enforced_rules import HasEnforcedRules
+from decorules.has_rules_actions import HasRulesActions
 from decorules.decorators import raise_if_false_on_class, raise_if_false_on_instance
 from decorules.predicates import key_type_enforcer
 from decorules.utils import member_enforcer
@@ -17,7 +18,7 @@ are_coordinates_within_distance_1 = lambda y: (sum([x ** 2 for x in y.coordinate
                          "Checks if a method called testme is present")
 @raise_if_false_on_class(member_enforcer('MULTIPLIER', float), AttributeError,
                          "Checks if a float multiplier is set on the class")
-class LibraryClass(metaclass=HasEnforcedRules):
+class LibraryClass(metaclass=HasRulesActions):
     MULTIPLIER = 0.5
     NOT_USED_MULTIPLIER = 20.0
 
@@ -29,3 +30,13 @@ class LibraryClass(metaclass=HasEnforcedRules):
         print(self.name)
 
     pass
+
+
+@raise_if_false_on_class(member_enforcer('MULTIPLIER', float, 2.0, operator.le),
+                         AttributeError,
+                         "Checks that the MULTIPLIER is <= 2.0")
+@raise_if_false_on_class(member_enforcer('MULTIPLIER', float, 0.0, operator.gt),
+                         AttributeError,
+                         "Checks that the MULTIPLIER is > 0.0")
+class ProducerBaseClass(metaclass=HasRulesActions):
+    MULTIPLIER = 1.0
