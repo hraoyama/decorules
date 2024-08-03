@@ -263,6 +263,7 @@ k.add(-9) # the managed int goes from 30 to 21
 assert NUMBER_PROCESSOR.to_process_list == [15, 21]
 k.add(40)  # will raise a ValueError as we try to pass 61>=50 to the LargeNumberProcessor
 ```
+Note that `run_if_false_on_instance` only takes 2 arguments: a predicate function taking the instance as an argument and the function that will be executed should the predicate be false. The latter takes the instance as an argument[^7].
 
 When using multiple decorators in general, one must be aware that the order of decorator matters with decorator closest to the function/class applied first. With multiple decorator we must also avoid clashes between decorators.
 
@@ -273,4 +274,5 @@ Though not intended for this use, the enforced rules (through predicate function
 [^3]: Here we refer to interactions with the `dataclasses` and `property` decorators 
 [^4]: The second argument will be used to examine class attributes when required. Note that by always providing a second argument and defaulting it to `None` (as was done in `key_type_enforcer`), the function can be used both on instances and class declarations.
 [^5]: Note that this is an exception type and not an instance. For rules on classes this defaults to `AttributeError`, for rules of instantiation this defaults to `ValueError`. Other exceptions or classes (including user defined ones) can be supplied, provided instances can be constructed from a string 
-[^6]: `member_enforcer` has 2 compulsory arguments: the `enforced_key` (a string with the attribute name) and the `enforced_type` (the type of the attribute) and 2 optional arguments: the `comparison_value` and the `operator_used`, the latter defaults to the boolean equality operator and is only applied if a value is provided. 
+[^6]: `member_enforcer` has 2 compulsory arguments: the `enforced_key` (a string with the attribute name) and the `enforced_type` (the type of the attribute) and 2 optional arguments: the `comparison_value` and the `operator_used`, the latter defaults to the boolean equality operator and is only applied if a value is provided.
+[^7]: additional arguments can be bound using methods like `partial`
