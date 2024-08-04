@@ -10,7 +10,7 @@ B. To __automatically trigger functionality using boolean conditions__ on an ins
 
 The decorators employed are:
 
-1. `raise_if_false_on_class` will raise an exception should class structure and/or attributes not adhere to user defined rules 
+1. `raise_if_false_on_class` will raise an exception should class structure and/or attributes within a class hierarchy not adhere to user defined rules 
 2. `raise_if_false_on_instance` will raise an exception should class instances not adhere to user defined rules[^2]
 3. `run_if_false_on_instance` will run user supplied functionality should class instances not adhere to user defined criteria[^2]
 4. `run_instance_rules` will apply the rules from 2. on any member function using this decorator 
