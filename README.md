@@ -269,7 +269,7 @@ Note that `run_if_false_on_instance` only takes 2 arguments: a predicate functio
 
 When using multiple decorators in general, one must be aware that the order of decorator matters with decorator closest to the function/class applied first. With multiple decorator we must also avoid clashes between decorators.
 
-Though not intended for this use, the enforced rules (through predicate functions) are available through the `EnforcedFunctions` static class and can thus be retrieved, applied and transferred at any point in the code.
+Though not intended for this use, the enforced rules and actions (both through predicate functions) are available through the `EnforcedFunctions` static class and can thus be retrieved, applied and transferred at any point in the code.
 
 [^1]: The functionality itself is up to the user. Possible suggestions could be callback mechanisms, logging, asynchronous tasks, etc.
 [^2]: By default, rules and actions on instances are enforced after creation of an instance only. It is possible use these rules and actions after any member function call by using the `run_instance_`-style decorator on the method.
