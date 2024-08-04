@@ -6,7 +6,7 @@ _decorules_ is a tiny python decorator library with two objectives:
 
 A. To __enforce rules on class structure and instance behavior for classes and class hierarchies__ through decorators at the point of class declaration. Useful for library developers.
 
-B. To __automatically trigger functionality using boolean conditions__ on an instance of a class[^1]  
+B. To __trigger user defined functionality using boolean conditions__ on an instance of a class[^1]  
 
 The decorators employed are:
 
