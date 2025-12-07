@@ -36,7 +36,7 @@ Should you require an installation of pip, follow the instructions on the [pip w
 
 ## Examples
 
-A worked out example of several types of class hierarchies can be found under `src/example`, with `library_class.py` and `client_class.py` representing the library and client respectively.
+A worked out example of several types of class hierarchies can be found under `src/example`, with [library_class.py](https://github.com/hraoyama/decorules/blob/main/src/example/library_class.py) and [client_class.py](https://github.com/hraoyama/decorules/blob/main/src/example/client_class.py) representing the library and client respectively.
 
 Further examples, including interaction with other decorators[^3], can be found in the source file under the `tests` directory. 
 
@@ -280,4 +280,5 @@ Though not intended for this use, the enforced rules and actions (both through p
 [^5]: Note that this is an exception type and not an instance. For rules on classes this defaults to `AttributeError`, for rules of instantiation this defaults to `ValueError`. Other exceptions or classes (including user defined ones) can be supplied, provided instances can be constructed from a string 
 [^6]: `member_enforcer` has 2 compulsory arguments: the `enforced_key` (a string with the attribute name) and the `enforced_type` (the type of the attribute) and 2 optional arguments: the `comparison_value` and the `operator_used`, the latter defaults to the boolean equality operator and is only applied if a value is provided.
 [^7]: additional arguments can be bound using methods like `partial`
+
 
