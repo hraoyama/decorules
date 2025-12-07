@@ -8,6 +8,8 @@ A. To __enforce rules on class structure and instance behavior for classes and c
 
 B. To __trigger user defined functionality using boolean conditions__ on an instance of a class[^1]  
 
+This gives the python developer tools equivalent to [Concepts in C++20](https://en.cppreference.com/w/cpp/language/constraints.html).
+
 The decorators employed are:
 
 1. `raise_if_false_on_class` will raise an exception should class structure and/or attributes within a class hierarchy not adhere to user defined rules 
@@ -278,3 +280,4 @@ Though not intended for this use, the enforced rules and actions (both through p
 [^5]: Note that this is an exception type and not an instance. For rules on classes this defaults to `AttributeError`, for rules of instantiation this defaults to `ValueError`. Other exceptions or classes (including user defined ones) can be supplied, provided instances can be constructed from a string 
 [^6]: `member_enforcer` has 2 compulsory arguments: the `enforced_key` (a string with the attribute name) and the `enforced_type` (the type of the attribute) and 2 optional arguments: the `comparison_value` and the `operator_used`, the latter defaults to the boolean equality operator and is only applied if a value is provided.
 [^7]: additional arguments can be bound using methods like `partial`
+
